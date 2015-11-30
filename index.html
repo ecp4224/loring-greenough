@@ -188,6 +188,8 @@
 		<script>
 			var trans = { };
 			var els = { };
+            var dragging = false;
+            var last_pos = {};
 			$('a[href*=#]:not([href=#])').click(function() {
 				if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
 					var target = $(this.hash);
@@ -200,10 +202,30 @@
 					}
 				}
 			});
+            
+            $('html').on('mousedown', function() {
+                dragging = true;
+            });
+            
+            $('html').on('mouseup', function() {
+                dragging = false;
+            });
+            
+            $('html').on('mousemove', function(e) {
+                if (last_pos && dragging) {
+                    var diff = e.clientX - last_pos.x;
+                    var temp = $(document);
+                    temp.scrollLeft(temp.scrollLeft() - diff);
+                }
+                last_pos = {
+                    x: e.clientX,
+                    y: e.clientY
+                }
+            });
 			
 				var _windw = $(window).width();//important
 				var _document = $(document).width();
-				$('html').on ('mousewheel', function (e) {
+				/*$('html').on ('mousewheel', function (e) {
 					var delta = e.originalEvent.wheelDelta;
 
 					var temp = $(document);
@@ -244,7 +266,7 @@
 						$('#right').fadeIn(400);
 					}
 
-				});
+				});*/
 			
 			$(document).ready(function() {
 				var temp = $(document);
